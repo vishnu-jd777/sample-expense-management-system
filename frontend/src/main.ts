@@ -11,6 +11,7 @@ type Expense = {
 let expenses: Expense[] = []
 let nextId = 1
 
+const filterInput = document.getElementById('filter') as HTMLSelectElement
 const form = document.getElementById('expense-form') as HTMLFormElement
 const titleInput = document.getElementById('title') as HTMLInputElement
 const amountInput = document.getElementById('amount') as HTMLInputElement
@@ -37,8 +38,12 @@ form.addEventListener('submit', (event) => {
 
 function renderExpenses(): void {
   expenseList.innerHTML = ''
+  const visible =
+  filterInput.value === 'all'
+    ? expenses
+    : expenses.filter((expense) => expense.category === filterInput.value)
 
-  for (const expense of expenses) {
+  for (const expense of visible) {
     const row = document.createElement('tr')
 
     const values = [expense.title, `₹${expense.amount}`, expense.category, expense.date]
@@ -51,15 +56,23 @@ function renderExpenses(): void {
     const actionCell = document.createElement('td')
     row.appendChild(actionCell)
     const deleteButton = document.createElement('button')
-deleteButton.textContent = 'Delete'
-deleteButton.addEventListener('click', () => deleteExpense(expense.id))
-actionCell.appendChild(deleteButton)
+    deleteButton.textContent = 'Delete'
+    deleteButton.addEventListener('click', () => deleteExpense(expense.id))
+    actionCell.appendChild(deleteButton)
 
     expenseList.appendChild(row)
   }
+  updateTotal(visible)
 }
 
 function deleteExpense(id: number): void {
   expenses = expenses.filter((expense) => expense.id !== id)
   renderExpenses()
 }
+
+function updateTotal(list: Expense[]): void {
+  const total = list.reduce((sum, expense) => sum + expense.amount, 0)
+  totalEl.textContent = String(total)
+}
+
+filterInput.addEventListener('change', renderExpenses)
