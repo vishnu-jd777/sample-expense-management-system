@@ -50,7 +50,16 @@ function renderExpenses(): void {
 
     const actionCell = document.createElement('td')
     row.appendChild(actionCell)
+    const deleteButton = document.createElement('button')
+deleteButton.textContent = 'Delete'
+deleteButton.addEventListener('click', () => deleteExpense(expense.id))
+actionCell.appendChild(deleteButton)
 
     expenseList.appendChild(row)
   }
+}
+
+function deleteExpense(id: number): void {
+  expenses = expenses.filter((expense) => expense.id !== id)
+  renderExpenses()
 }
