@@ -45,6 +45,8 @@ class ExpenseManager:
         if self.expenses:
             self.next_id=max(expense.id for expense in self.expenses)+1
 
+    
+
 
             
 

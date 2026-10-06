@@ -70,6 +70,10 @@ while True:
     elif choice == "3":
         expense_id = int(input("Enter expense ID to delete: "))
 
+        if expense_id not in [expense.id for expense in manager.list_expenses()]:
+            print("Expense ID not found.")
+            continue
+
         manager.delete_expense(expense_id)
 
         print("Expense deleted successfully!")
